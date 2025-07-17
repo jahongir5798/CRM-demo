@@ -1,7 +1,6 @@
 package uz.jahonservice.crmdemo.dto.response;
 
 import lombok.*;
-import uz.jahonservice.crmdemo.dto.ErrorDto;
 
 import java.util.List;
 

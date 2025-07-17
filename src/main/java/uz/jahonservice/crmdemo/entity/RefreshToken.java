@@ -24,5 +24,5 @@ public class RefreshToken {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private Users user;
+    private Users users;
 }

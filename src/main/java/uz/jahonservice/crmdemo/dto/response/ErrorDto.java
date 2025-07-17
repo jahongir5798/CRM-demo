@@ -1,4 +1,4 @@
-package uz.jahonservice.crmdemo.dto;
+package uz.jahonservice.crmdemo.dto.response;
 
 import lombok.*;
 
