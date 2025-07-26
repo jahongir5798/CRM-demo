@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uz.jahonservice.crmdemo.entity.RefreshToken;
+import uz.jahonservice.crmdemo.entity.Users;
+import uz.jahonservice.crmdemo.exception.MyException;
 import uz.jahonservice.crmdemo.repository.RefreshTokenRepository;
 import uz.jahonservice.crmdemo.repository.UserRepository;
 
@@ -23,12 +25,22 @@ public class RefreshTokenService {
     private Long refreshTokenExpiry;
 
     public RefreshToken createRefreshToken(String username) {
-        RefreshToken refreshToken = RefreshToken.builder()
-                .users(userRepository.findByUserName(username).orElseThrow())
-                .token(UUID.randomUUID().toString())
-                .expiresAt(Instant.now().plusMillis(refreshTokenExpiry))
-                .build();
-        return refreshTokenRepository.save(refreshToken);
+
+        try {
+            Users users = userRepository.findByUserName(username).orElseThrow();
+
+            Optional<RefreshToken> byUsers = refreshTokenRepository.findByUsers(users);
+            byUsers.ifPresent(refreshTokenRepository::delete);
+
+            RefreshToken refreshToken = RefreshToken.builder()
+                    .users(users)
+                    .token(UUID.randomUUID().toString())
+                    .expiresAt(Instant.now().plusMillis(refreshTokenExpiry))
+                    .build();
+            return refreshTokenRepository.save(refreshToken);
+        } catch (Exception e) {
+            throw new MyException("create refresh token error" + e.getMessage());
+        }
     }
 
 

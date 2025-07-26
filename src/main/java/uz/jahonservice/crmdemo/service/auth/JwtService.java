@@ -1,4 +1,4 @@
-package uz.jahonservice.crmdemo.service;
+package uz.jahonservice.crmdemo.service.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

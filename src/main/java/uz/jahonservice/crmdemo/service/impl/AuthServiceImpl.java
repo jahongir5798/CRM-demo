@@ -14,9 +14,10 @@ import uz.jahonservice.crmdemo.dto.auth.RefreshTokenRequestDto;
 import uz.jahonservice.crmdemo.dto.response.ApiResponse;
 import uz.jahonservice.crmdemo.entity.RefreshToken;
 import uz.jahonservice.crmdemo.entity.Users;
+import uz.jahonservice.crmdemo.exception.MyException;
 import uz.jahonservice.crmdemo.repository.UserRepository;
 import uz.jahonservice.crmdemo.service.AuthService;
-import uz.jahonservice.crmdemo.service.JwtService;
+import uz.jahonservice.crmdemo.service.auth.JwtService;
 import uz.jahonservice.crmdemo.service.auth.RefreshTokenService;
 
 @Service
@@ -31,22 +32,26 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ApiResponse<UserDto> registration(UserDto userDto) {
-        Users users = new Users();
-        users.setUserName(userDto.getUserName());
-        users.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        users.setFirstName(userDto.getFirstName());
-        users.setLastName(userDto.getLastName());
-        users.setRole(userDto.getRole());
-        users.setPhoneNumber(userDto.getPhoneNumber());
-        users.setPhoneNumberSecond(userDto.getPhoneNumberSecond());
-        userRepository.save(users);
+        try {
+            Users users = new Users();
+            users.setUserName(userDto.getUserName());
+            users.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            users.setFirstName(userDto.getFirstName());
+            users.setLastName(userDto.getLastName());
+            users.setRole(userDto.getRole());
+            users.setPhoneNumber(userDto.getPhoneNumber());
+            users.setPhoneNumberSecond(userDto.getPhoneNumberSecond());
+            userRepository.save(users);
 
-        return ApiResponse.<UserDto>builder()
-                .code(0)
-                .message("Registration successful")
-                .success(true)
-                .result(userDto)
-                .build();
+            return ApiResponse.<UserDto>builder()
+                    .code(0)
+                    .message("Registration successful")
+                    .success(true)
+                    .result(userDto)
+                    .build();
+        } catch (Exception e) {
+            throw new MyException("registration failed" + e.getMessage());
+        }
     }
 
     @Override

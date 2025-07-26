@@ -47,7 +47,7 @@ public class Users {
     )
     List<Groups> groups;
 
-     @OneToMany(
+    @OneToMany(
             mappedBy = "users",
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL
@@ -61,5 +61,8 @@ public class Users {
     )
     List<Attendance> attendanceList;
 
-
+    @OneToOne(mappedBy = "users",
+            cascade = CascadeType.ALL
+    )
+    private RefreshToken refreshToken;
 }
