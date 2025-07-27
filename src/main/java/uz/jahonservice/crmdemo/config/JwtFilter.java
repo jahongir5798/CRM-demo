@@ -26,8 +26,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String clientIp = getClientIp(request);
-        System.out.println("ip add: " + clientIp);
+
 
         String authHeader = request.getHeader("Authorization");
         String token = null;
@@ -50,22 +49,6 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    public String getClientIp(HttpServletRequest request) {
-        String ipAddress = request.getHeader("X-Forwarded-For");
-        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("Proxy-Client-IP");
-        }
-        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getRemoteAddr();
-        }
 
-        if (ipAddress != null && ipAddress.contains(",")) {
-            ipAddress = ipAddress.split(",")[0];
-        }
-        return ipAddress;
-    }
 }
 

@@ -33,6 +33,7 @@ public class Users {
 
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
     private RoleEnum role;
 
     @Column(nullable = false)

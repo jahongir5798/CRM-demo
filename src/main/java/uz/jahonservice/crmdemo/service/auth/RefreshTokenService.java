@@ -25,22 +25,23 @@ public class RefreshTokenService {
     private Long refreshTokenExpiry;
 
     public RefreshToken createRefreshToken(String username) {
-
         try {
-            Users users = userRepository.findByUserName(username).orElseThrow();
 
-            Optional<RefreshToken> byUsers = refreshTokenRepository.findByUsers(users);
-            byUsers.ifPresent(refreshTokenRepository::delete);
+            Optional<RefreshToken> byUsername = refreshTokenRepository.findByUsername(username);
+            if (byUsername.isPresent()) {
+                return byUsername.get();
+            }
 
             RefreshToken refreshToken = RefreshToken.builder()
-                    .users(users)
+                    .users(userRepository.findByUserName(username).orElseThrow())
                     .token(UUID.randomUUID().toString())
                     .expiresAt(Instant.now().plusMillis(refreshTokenExpiry))
                     .build();
             return refreshTokenRepository.save(refreshToken);
         } catch (Exception e) {
-            throw new MyException("create refresh token error" + e.getMessage());
+            throw new MyException("create refresh token error " + e.getMessage());
         }
+
     }
 
 

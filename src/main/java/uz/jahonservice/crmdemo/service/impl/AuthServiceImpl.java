@@ -75,21 +75,25 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ApiResponse<JwtResponseDto> refreshToken(RefreshTokenRequestDto refreshTokenRequestDTO) {
-        JwtResponseDto jwtResponseDto = refreshTokenService.findByToken(refreshTokenRequestDTO.getToken())
-                .map(refreshTokenService::verifyExpiration)
-                .map(RefreshToken::getUsers)
-                .map(userInfo -> {
-                    String accessToken = jwtService.GenerateToken(userInfo.getUserName());
-                    return JwtResponseDto.builder()
-                            .accessToken(accessToken)
-                            .refreshToken(refreshTokenRequestDTO.getToken()).build();
-                }).orElseThrow(() -> new RuntimeException("Refresh Token is not in DB..!!"));
-        return ApiResponse.<JwtResponseDto>builder()
-                .code(0)
-                .message("successfully refreshed token")
-                .success(true)
-                .result(jwtResponseDto)
-                .build();
+        try {
+            JwtResponseDto jwtResponseDto = refreshTokenService.findByToken(refreshTokenRequestDTO.getToken())
+                    .map(refreshTokenService::verifyExpiration)
+                    .map(RefreshToken::getUsers)
+                    .map(userInfo -> {
+                        String accessToken = jwtService.GenerateToken(userInfo.getUserName());
+                        return JwtResponseDto.builder()
+                                .accessToken(accessToken)
+                                .refreshToken(refreshTokenRequestDTO.getToken()).build();
+                    }).orElseThrow(() -> new RuntimeException("Refresh Token is not in DB..!!"));
+            return ApiResponse.<JwtResponseDto>builder()
+                    .code(0)
+                    .message("successfully refreshed token")
+                    .success(true)
+                    .result(jwtResponseDto)
+                    .build();
+        } catch (Exception e) {
+            throw new MyException("Refresh token exception " + e.getMessage());
+        }
     }
 
 
