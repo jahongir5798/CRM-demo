@@ -31,17 +31,17 @@ public class AuthController {
     }
 
     @PostMapping("sign-in")
-    public ApiResponse<JwtResponseDto> AuthenticateAndGetToken(@RequestBody @Valid  AuthRequestDto authRequestDto) {
+    public ApiResponse<JwtResponseDto<UserDto>> AuthenticateAndGetToken(@RequestBody @Valid  AuthRequestDto authRequestDto) {
         log.info("auth controller authentication method invoked");
-        ApiResponse<JwtResponseDto> jwtResponseDto = authService.authenticateAndGetToken(authRequestDto);
+        ApiResponse<JwtResponseDto<UserDto>> jwtResponseDto = authService.authenticateAndGetToken(authRequestDto);
         log.info("auth controller authentication method completed");
         return jwtResponseDto;
     }
 
     @PostMapping("/refreshToken")
-    public ApiResponse<JwtResponseDto> refreshToken(@RequestBody @Valid  RefreshTokenRequestDto refreshTokenRequestDTO) {
+    public ApiResponse<JwtResponseDto<UserDto>> refreshToken(@RequestBody @Valid  RefreshTokenRequestDto refreshTokenRequestDTO) {
         log.info("auth controller refresh token method invoked");
-        ApiResponse<JwtResponseDto> jwtResponseDto = authService.refreshToken(refreshTokenRequestDTO);
+        ApiResponse<JwtResponseDto<UserDto>> jwtResponseDto = authService.refreshToken(refreshTokenRequestDTO);
         log.info("auth controller refresh token method completed");
         return jwtResponseDto;
     }
