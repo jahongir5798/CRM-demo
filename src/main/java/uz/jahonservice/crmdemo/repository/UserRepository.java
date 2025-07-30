@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<Users, UUID> {
     @Query("SELECT r.users FROM RefreshToken r WHERE r.token = :token")
     Optional<Users> findUserByToken(@Param("token") String token);
 
+    boolean existsByUserName(String userName);
+
 }

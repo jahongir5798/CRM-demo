@@ -3,24 +3,20 @@ package uz.jahonservice.crmdemo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
 import java.util.UUID;
 
+@Entity
+@Table(name = "admin")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@Entity
-public class RefreshToken {
+public class Admin {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    private String token;
-
-    private Instant expiresAt;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id") //, referencedColumnName = "id"

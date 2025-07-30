@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -14,26 +13,18 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "attendance")
-public class Attendance {
+@Table(name = "teacherSubjects")
+public class TeacherSubjects {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private boolean identity;  //todo: boolen -> darsda bor false -> darsda yuq
-
-    private LocalDate date;
+    private String subjectName;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
-    private Groups groups;
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private Student student;
+
 }
-
-
-
-

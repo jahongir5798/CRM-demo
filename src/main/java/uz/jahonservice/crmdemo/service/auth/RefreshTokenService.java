@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uz.jahonservice.crmdemo.entity.RefreshToken;
-import uz.jahonservice.crmdemo.entity.Users;
 import uz.jahonservice.crmdemo.exception.MyException;
 import uz.jahonservice.crmdemo.repository.RefreshTokenRepository;
 import uz.jahonservice.crmdemo.repository.UserRepository;

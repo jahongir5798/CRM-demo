@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uz.jahonservice.crmdemo.entity.enums.RoleEnum;
 
-
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -41,26 +39,15 @@ public class Users {
 
     private String phoneNumberSecond;
 
-    @OneToMany(
-            mappedBy = "users",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL
-    )
-    List<Groups> groups;
+    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
+    private Admin admin;
 
-    @OneToMany(
-            mappedBy = "users",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL
-    )
-    List<Payments> paymentsList;
+    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
+    private Teacher teacher;
 
-    @OneToMany(
-            mappedBy = "users",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL
-    )
-    List<Attendance> attendanceList;
+    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
+    private Student student;
+
 
     @OneToOne(mappedBy = "users",
             cascade = CascadeType.ALL

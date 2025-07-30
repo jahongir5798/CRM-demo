@@ -20,7 +20,7 @@ public class UserDto {
 
     @Column(unique = true)
     @NotNull(message = "username cannot be null")
-    private String userName;
+    private String username;
 
     @NotNull(message = "password cannot be null")
     private String password;

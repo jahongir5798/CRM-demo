@@ -20,7 +20,7 @@ public class CustomUserDetails extends Users implements UserDetails {
         this.password = byUsername.getPassword();
         List<GrantedAuthority> auths = new ArrayList<>();
         auths.add(new SimpleGrantedAuthority(byUsername.getRole().toString().toUpperCase()));
-
+        
         this.authorities = auths;
     }
 

@@ -21,8 +21,6 @@ import uz.jahonservice.crmdemo.service.auth.JwtService;
 import uz.jahonservice.crmdemo.service.auth.RefreshTokenService;
 import uz.jahonservice.crmdemo.service.mapper.UserMapper;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -38,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
     public ApiResponse<UserDto> registration(UserDto userDto) {
         try {
             Users users = new Users();
-            users.setUserName(userDto.getUserName());
+            users.setUserName(userDto.getUsername());
             users.setPassword(passwordEncoder.encode(userDto.getPassword()));
             users.setFirstName(userDto.getFirstName());
             users.setLastName(userDto.getLastName());
@@ -62,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
     public ApiResponse<JwtResponseDto<UserDto>> authenticateAndGetToken(AuthRequestDto authRequestDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDto.getUsername(), authRequestDto.getPassword()));
         if (authentication.isAuthenticated()) {
+
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(authRequestDto.getUsername());
             Users users = userRepository.findByUserName(authRequestDto.getUsername()).orElseThrow();
             JwtResponseDto<UserDto> jwtResponseDto = new JwtResponseDto<>();
@@ -85,22 +84,18 @@ public class AuthServiceImpl implements AuthService {
     public ApiResponse<JwtResponseDto<UserDto>> refreshToken(RefreshTokenRequestDto refreshTokenRequestDTO) {
         try {
 
-            JwtResponseDto jwtResponseDto = refreshTokenService.findByToken(refreshTokenRequestDTO.getToken())
+            JwtResponseDto<UserDto> responseDto = refreshTokenService.findByToken(refreshTokenRequestDTO.getToken())
                     .map(refreshTokenService::verifyExpiration)
                     .map(RefreshToken::getUsers)
-                    .map(userInfo -> {
-                        String accessToken = jwtService.GenerateToken(userInfo.getUserName());
-                        return JwtResponseDto.builder()
+                    .map(user -> {
+                        String accessToken = jwtService.GenerateToken(user.getUserName());
+                        return JwtResponseDto.<UserDto>builder()
                                 .accessToken(accessToken)
                                 .refreshToken(refreshTokenRequestDTO.getToken())
+                                .user(userMapper.toUserDto(user))
                                 .build();
-                    }).orElseThrow(() -> new RuntimeException("Refresh Token is not in DB..!!"));
-
-            JwtResponseDto<UserDto> responseDto = new JwtResponseDto<>();
-            responseDto.setAccessToken(jwtResponseDto.getAccessToken());
-            responseDto.setRefreshToken(jwtResponseDto.getRefreshToken());
-            Users users = userRepository.findUserByToken(refreshTokenRequestDTO.getToken()).orElseThrow();
-            responseDto.setUser(userMapper.toUserDto(users));
+                    })
+                    .orElseThrow(() -> new RuntimeException("Refresh Token is not in DB..!!"));
 
             return ApiResponse.<JwtResponseDto<UserDto>>builder()
                     .code(0)

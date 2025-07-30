@@ -28,10 +28,6 @@ public class Groups {
 
     private Long cost;
 
-     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Users users;;
-
     @OneToMany(
             mappedBy = "groups",
             fetch = FetchType.EAGER,
@@ -44,14 +40,18 @@ public class Groups {
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL
     )
-    private List<Payments> paymentsList;
+    private List<Attendance> attendanceList;
 
     @OneToMany(
             mappedBy = "groups",
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL
     )
-    private List<Attendance> attendanceList;
+    private List<Payments> paymentsList;
+
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 
     @CreatedDate
     private LocalDateTime createdAt;

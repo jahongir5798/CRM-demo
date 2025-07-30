@@ -27,13 +27,12 @@ public class Payments {
     private LocalDateTime identify;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
-    private Groups groups;
+    @JoinColumn(name = "student_id")
+    private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Users users;
-
+    @JoinColumn(name = "group_id")
+    private Groups groups;
 
     @CreatedDate
     private LocalDateTime createdAt;
